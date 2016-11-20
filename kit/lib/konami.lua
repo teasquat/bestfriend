@@ -3,7 +3,7 @@ local konami = {
   instances = {},
 }
 
-konami.__index = konami
+setmetatable(konami, konami)
 
 function konami.add(f)
   assert(f and f.pattern, "Why would you add a pattern ... with no pattern?")

@@ -1,5 +1,10 @@
 love.graphics.setDefaultFilter("nearest", "nearest")
 
+shack  = require("kit/lib/shack")
+state  = require("kit/lib/state")
+tiny   = require("kit/lib/tiny")
+konami = require("kit/lib/konami")
+
 function love.run()
   local dt = 0
 
@@ -18,6 +23,8 @@ function love.run()
     love.timer.step()
   end
 
+  state:switch("src/game")
+
   while true do
     update_timer = update_timer + dt
 
@@ -25,13 +32,13 @@ function love.run()
       love.event.pump()
 
       for name, a, b, c, d, e, f in love.event.poll() do
-        event[name](a, b, c, d, e, f)
-
         if name == "quit" then
           if not love.quit or not love.quit() then
             return a
           end
         end
+
+        love.handlers[name](a, b, c, d, e, f)
       end
     end
 
@@ -41,7 +48,8 @@ function love.run()
     end
 
     if update_timer > target_delta then
-      love.update(dt)
+      shack:update(dt)
+      state:update(dt)
     end
 
     if love.graphics and love.graphics.isActive() then
@@ -50,7 +58,8 @@ function love.run()
 
       love.graphics.origin()
 
-      love.draw()
+      shack:apply()
+      state:draw()
 
       love.graphics.present()
     end

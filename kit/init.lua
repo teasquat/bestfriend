@@ -4,6 +4,7 @@ shack  = require("kit/lib/shack")
 state  = require("kit/lib/state")
 tiny   = require("kit/lib/tiny")
 konami = require("kit/lib/konami")
+light  = require("kit/lib/light")
 
 function love.run()
   local dt = 0
@@ -24,6 +25,16 @@ function love.run()
   end
 
   state:switch("src/game")
+
+  light_world = light({
+    ambient = {
+      55,
+      55,
+      55,
+    },
+    refractionStrength = 32.0,
+    reflectionVisibility = 0.75,
+  })
 
   while true do
     update_timer = update_timer + dt
@@ -50,6 +61,7 @@ function love.run()
     if update_timer > target_delta then
       shack:update(dt)
       state:update(dt)
+      light_world:update(dt)
     end
 
     if love.graphics and love.graphics.isActive() then
@@ -59,7 +71,10 @@ function love.run()
       love.graphics.origin()
 
       shack:apply()
-      state:draw()
+      light_world:draw(function()
+        love.graphics.setColor(255, 255, 255)
+        state:draw()
+      end)
 
       love.graphics.present()
     end

@@ -4,7 +4,7 @@ local light = light_world:newLight(100, 200, 255, 255, 255, 1300)
 local circl = light_world:newRectangle(100, 100, 100, 100)
 
 function game.load()
-  print("loaded, boi")
+
 end
 
 function game.update(dt)

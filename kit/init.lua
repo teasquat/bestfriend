@@ -2,7 +2,6 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 
 shack  = require("kit/lib/shack")
 state  = require("kit/lib/state")
-tiny   = require("kit/lib/tiny")
 konami = require("kit/lib/konami")
 light  = require("kit/lib/light")
 bump   = require("kit/lib/bump")

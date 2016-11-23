@@ -5,6 +5,7 @@ state  = require("kit/lib/state")
 tiny   = require("kit/lib/tiny")
 konami = require("kit/lib/konami")
 light  = require("kit/lib/light")
+bump   = require("kit/lib/bump")
 
 function love.run()
   local dt = 0
@@ -26,6 +27,7 @@ function love.run()
 
   state:switch("src/game")
 
+  world       = bump.newWorld()
   light_world = light({
     ambient = {
       55,

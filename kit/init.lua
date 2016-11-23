@@ -7,6 +7,17 @@ konami = require("kit/lib/konami")
 light  = require("kit/lib/light")
 bump   = require("kit/lib/bump")
 
+world       = bump.newWorld()
+light_world = light({
+  ambient = {
+    55,
+    55,
+    55,
+  },
+  refractionStrength = 32.0,
+  reflectionVisibility = 0.75,
+})
+
 function love.run()
   local dt = 0
 
@@ -26,17 +37,6 @@ function love.run()
   end
 
   state:switch("src/game")
-
-  world       = bump.newWorld()
-  light_world = light({
-    ambient = {
-      55,
-      55,
-      55,
-    },
-    refractionStrength = 32.0,
-    reflectionVisibility = 0.75,
-  })
 
   while true do
     update_timer = update_timer + dt

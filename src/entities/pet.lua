@@ -14,8 +14,8 @@ function pet_factory.make(x, y, path)
     -- static
     g = 30, -- gravity
     -- movement
-    frcx = 2,  -- friction x
-    frcy = 2,  -- friction y
+    frcx = 1.5,  -- friction x
+    frcy = 1.5,  -- friction y
     --
     health = 100,
 

@@ -67,8 +67,8 @@ function player_factory.make(x, y)
           shack:set_shake(shake)
 
           self.grounded = true
-          self.dy       = 0
         end
+        self.dy = 0
       end
 
       if v.normal.x ~= 0 then

@@ -25,6 +25,8 @@ function player_factory.make(x, y)
       wall       = 0,
       -- static
       gravity    = 30,
+      -- pet stuff
+      pet = nil,
   }
 
   function player:load()

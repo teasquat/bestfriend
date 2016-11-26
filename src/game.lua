@@ -86,6 +86,8 @@ function make_player(x, y)
   local player         = player_factory.make(x, y)
 
   table.insert(game_objects, player)
+
+  player.pet = make_pet(x, y - 32)
 end
 
 function make_block(x, y, path, w, h) -- path is image
@@ -97,9 +99,11 @@ end
 
 function make_pet(x, y) -- path is image
   local pet_factory = require("src/entities/pet")
-  local pet         = pet_factory.make(x, y)
+  local pet         = pet_factory.make(x, y, "assets/pet/fish.png")
 
   table.insert(game_objects, pet)
+
+  return pet
 end
 
 return game

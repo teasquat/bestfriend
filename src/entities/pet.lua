@@ -1,6 +1,6 @@
 local pet_factory = {}
 
-function pet_factory.make(x,y)
+function pet_factory.make(x, y, path)
   local pet = {
     x = x, y = y,
     w = 16, h = 16,
@@ -16,6 +16,8 @@ function pet_factory.make(x,y)
 
     health = 100,
   }
+
+  pet.img = love.graphics.newImage(path)
 
   function pet:load()
     world:add(self,self.x,self.y,self.w,self.h)
@@ -33,15 +35,14 @@ function pet_factory.make(x,y)
   end
 
   function pet:draw()
-    love.graphics.setColor(130, 90, 30)
-    love.graphics.rectangle("fill", self.x, self.y, self.w, self.w)
-  end
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(self.img, self.x, self.y)
 
     love.graphics.setColor(255, 0, 0)
     love.graphics.rectangle("fill", self.x - 25, self.y - 30, 50, 10)
     love.graphics.setColor(0, 255, 0)
     love.graphics.rectangle("fill", self.x - 25, self.y - 30, self.health /2, 10)
-    end
+  end
 
   return pet
 end

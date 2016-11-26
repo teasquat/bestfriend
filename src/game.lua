@@ -6,6 +6,13 @@ function math.lerp(a, b, t)
   return (1 - t) * a + t * b
 end
 
+function ignore_filter(item, other)
+  if other.status == "ignore" then
+    return "cross"
+  end
+  return "slide"
+end
+
 -- handlers
 game_objects = {} -- all local game objects
 online_refs  = {} -- all references to to-be-submitted objects
@@ -88,7 +95,6 @@ function make_player(x, y)
   table.insert(game_objects, player)
 
   player.pet = make_pet(x, y - 32)
-  player.pet.player = player
 end
 
 function make_block(x, y, path, w, h) -- path is image

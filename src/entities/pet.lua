@@ -17,7 +17,9 @@ function pet_factory.make(x, y, path)
     health = 100,
 
     player = nil,
-    picked_up = true
+    picked_up = true,
+    -- status
+    status = "ignore",
   }
 
   pet.img = love.graphics.newImage(path)
@@ -27,13 +29,11 @@ function pet_factory.make(x, y, path)
   end
 
   function pet:update(dt)
-    if picked_up == true then
-      self.y = player.y - 32
-    else
+    if not self.picked_up then
       self.dy = self.dy + self.g * dt
       self.dy = self.dy - (self.dy / self.frcy) * dt
     end
-    self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy)
+    self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, ignore_filter)
 
     if self.health > 0 then
       self.health = self.health - 10 * dt

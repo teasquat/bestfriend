@@ -27,6 +27,9 @@ function player_factory.make(x, y)
       gravity    = 30,
       -- pet stuff
       pet = nil,
+      picked_up = true,
+      -- status
+      status = "ignore",
   }
 
   function player:load()
@@ -51,7 +54,7 @@ function player_factory.make(x, y)
     self.dy = self.dy - (self.dy / self.frcy) * dt
 
     -- movement
-    self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy)
+    self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, ignore_filter)
 
     self.grounded = false
 
@@ -76,7 +79,9 @@ function player_factory.make(x, y)
 
           self.grounded = true
         end
-        self.dy = 0
+        if v.other ~= self.pet then
+          self.dy = 0
+        end
       end
 
       if v.normal.x ~= 0 then
@@ -86,6 +91,10 @@ function player_factory.make(x, y)
           self.wall = v.normal.x
         end
       end
+    end
+    if self.picked_up then
+      self.pet.y = self.y - self.h
+      self.pet.x = self.x
     end
   end
 

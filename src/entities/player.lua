@@ -8,7 +8,7 @@ function player_factory.make(x, y)
       dy = 0,
       -- movement
       acc  = 30,   -- acceleration
-      frcx = 0.15,  -- friction x
+      frcx = 0.1,  -- friction x
       frcy = 1.5,  -- friction y
       -- (kinda-lol) static
       w = 16,     -- width
@@ -19,7 +19,7 @@ function player_factory.make(x, y)
       jump  = "x",
       -- jumping
       grounded   = false,  -- whether or not am touching ground
-      jump_force = 10,     -- how much force
+      jump_force = 7,     -- how much force
       --static
       gravity    = 30,
   }
@@ -49,8 +49,8 @@ function player_factory.make(x, y)
     self.grounded = false
 
     local ww, wh = camera:view_dimensions()
-    camera.x = math.lerp(camera.x, self.x - ww / 2, dt * 3) -- interpolate camera towards player
-    camera.y = math.lerp(camera.y, self.y - wh / 1.45, dt) -- interpolate camera towards player
+    camera.x = math.lerp(camera.x, self.x + self.w / 2 - ww / 2, dt * 3) -- interpolate camera towards player
+    camera.y = math.lerp(camera.y, self.y + self.h / 2 - wh / 1.45, dt * 2.5) -- interpolate camera towards player
 
     for i, v in ipairs(self.cols) do
       if v.normal.y ~= 0 then

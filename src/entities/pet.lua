@@ -12,7 +12,9 @@ function pet_factory.make(x,y)
     frcx = 0.15,  -- friction x
     frcy = 1.5,  -- friction y
     -- static
-    g = 30 -- gravity
+    g = 30, -- gravity
+
+    health = 100,
   }
 
   function pet:load()
@@ -24,12 +26,19 @@ function pet_factory.make(x,y)
     self.dy = self.dy - (self.dy / self.frcy) * dt
 
     self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy)
+    self.health = self.health - 10 * dt
   end
 
   function pet:draw()
     love.graphics.setColor(130, 90, 30)
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.w)
   end
+
+    love.graphics.setColor(255, 0, 0)
+    love.graphics.rectangle("fill", self.x - 25, self.y - 30, 50, 10)
+    love.graphics.setColor(0, 255, 0)
+    love.graphics.rectangle("fill", self.x - 25, self.y - 30, self.health /2, 10)
+    end
 
   return pet
 end

@@ -13,6 +13,8 @@ online_refs  = {} -- all references to to-be-submitted objects
 function game.load()
   game_objects = {}
 
+  camera.sx, camera.sy = 0.25, 0.25
+
   -- TODO: make level stuff
   make_level(love.graphics.newImage("assets/levels/demo.png"):getData())
 
@@ -64,9 +66,11 @@ function make_level(image_data)
     for y = 1, image_data:getHeight() do
       local r, g, b, a = image_data:getPixel(x - 1, y - 1)
 
-      if r + g + b == 0 then
-        make_block(x * 16, y * 16, "assets/sheets/grass.png", 16, 16)
-      elseif r == 255 and g == 0 and b == 0 then
+      if r == 255 and g == 0 and b == 0 then
+        make_block(x * 16, y * 16, "assets/dirt.png", 16, 16)
+      elseif r == 0 and g == 255 and b == 255 then
+        make_block(x * 16, y * 16, "assets/grass.png", 16, 16)
+      elseif r == 0 and g == 0 and b == 0 then
         make_player(x * 16, y * 16)
       end
     end
@@ -82,7 +86,7 @@ end
 
 function make_block(x, y, path, w, h) -- path is image
   local block_factory = require("src/entities/block")
-  local block         = block_factory.make(x, y, w or 16, h or 16)
+  local block         = block_factory.make(x, y, w or 16, h or 16, path)
 
   table.insert(game_objects, block)
 end

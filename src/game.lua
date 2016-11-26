@@ -72,6 +72,8 @@ function make_level(image_data)
         make_block(x * 16, y * 16, "assets/grass.png", 16, 16)
       elseif r == 0 and g == 0 and b == 0 then
         make_player(x * 16, y * 16)
+      elseif r == 255 and g == 255 and b == 0 then
+        make_pet(x * 16, y * 16)
       end
     end
   end
@@ -89,6 +91,13 @@ function make_block(x, y, path, w, h) -- path is image
   local block         = block_factory.make(x, y, w or 16, h or 16, path)
 
   table.insert(game_objects, block)
+end
+
+function make_pet(x, y) -- path is image
+  local pet_factory = require("src/entities/pet")
+  local pet         = pet_factory.make(x, y)
+
+  table.insert(game_objects, pet)
 end
 
 return game

@@ -26,7 +26,10 @@ function pet_factory.make(x,y)
     self.dy = self.dy - (self.dy / self.frcy) * dt
 
     self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy)
-    self.health = self.health - 10 * dt
+
+    if self.health > 0 then
+      self.health = self.health - 10 * dt
+    end
   end
 
   function pet:draw()

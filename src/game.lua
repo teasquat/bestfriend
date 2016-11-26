@@ -17,7 +17,7 @@ end
 game_objects = {} -- all local game objects
 online_refs  = {} -- all references to to-be-submitted objects
 
-online = true
+online = false
 
 if online then
   local socket = require "socket"

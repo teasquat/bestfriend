@@ -12,8 +12,8 @@ function pet_factory.make(x, y, path)
     -- static
     g = 30, -- gravity
     -- movement
-    frcx = 2,  -- friction x
-    frcy = 2,  -- friction y
+    frcx = 1.5,  -- friction x
+    frcy = 1.5,  -- friction y
     --
     health = 100,
 
@@ -72,6 +72,10 @@ function pet_factory.make(x, y, path)
     love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, 40, 4)
     love.graphics.setColor(0, 255, 0)
     love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, (self.health / 100) * 40, 4)
+  end
+
+  function pet:socket()
+    client:send("pt_" .. self.x .. ":" .. self.y .. ":" .. self.dx .. ":" .. self.dy .. "\n")
   end
 
   return pet

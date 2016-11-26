@@ -6,6 +6,15 @@ function math.lerp(a, b, t)
   return (1 - t) * a + t * b
 end
 
+function math.sign(n)
+  if n < 0 then
+    return -1
+  elseif n > 0 then
+    return 1
+  end
+  return nil
+end
+
 function ignore_filter(item, other)
   if other.status == "ignore" then
     return "cross"
@@ -25,7 +34,19 @@ pets = {
   [6] = "fish",
   [7] = "parrot",
   [8] = "penguin",
+  [9] = "pig",
+  [10] = "dog",
 }
+
+online = false
+
+if online then
+  local socket = require "socket"
+  client = socket.tcp()
+  client:connect("localhost", 7788) -- change to server ip
+end
+t = 0
+update_time = 0.1
 
 function game.load()
   math.randomseed(os.time())
@@ -46,6 +67,15 @@ function game.update(dt)
   for i, v in ipairs(game_objects) do
     if v.update then
       v:update(dt)
+    end
+  end
+
+  t = t + dt
+  if online and t > update_time then
+    for i, v in ipairs(game_objects) do
+      if v.socket then
+        v:socket()
+      end
     end
   end
 end

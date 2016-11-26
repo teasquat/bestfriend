@@ -39,6 +39,7 @@ pets = {
   [11] = "turtle",
   [12] = "duck",
   [13] = "bear",
+  [14] = "tiger",
 }
 
 online = false

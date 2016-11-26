@@ -29,7 +29,10 @@ function pet_factory.make(x, y, path)
   function pet.filter(item, other)
     if other.status == "ignore" then
       return
+    elseif other.status == "food" then
+      return "cross"
     end
+
     return "slide"
   end
 

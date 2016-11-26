@@ -39,6 +39,10 @@ function player_factory.make(x, y)
 
       index   = 1,
       dir     = 1,
+      tshirt = {},
+      beard = {},
+      tshirt_image = nil,
+      beard_image = nil
   }
 
   function player:load()
@@ -54,6 +58,10 @@ function player_factory.make(x, y)
     self.neutral_n[1] = love.graphics.newImage("assets/player/neutral_n.png")
 
     self.current = self.walk
+    self.tshirt = {r = math.random(50, 230), g = math.random(50, 230), b=math.random(50, 230) }
+    self.beard = {r = math.random(50, 230), g = math.random(50, 230), b=math.random(50, 230) }
+    self.tshirt_image = love.graphics.newImage("assets/cosmetics/tshirt" .. math.random(1,2) .. ".png")
+    self.beard_image = love.graphics.newImage("assets/cosmetics/beard1.png")
   end
 
   function player:update(dt)
@@ -146,6 +154,10 @@ function player_factory.make(x, y)
     -- TODO: make good graphics
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.current[math.floor(self.index % #self.current) + 1], self.x + self.w / 2, self.y, 0, self.dir, 1, self.w / 2)
+    love.graphics.setColor(self.tshirt.r, self.tshirt.g, self.tshirt.b)
+    love.graphics.draw(self.tshirt_image, self.x + self.w / 2, self.y, 0, self.dir, 1, self.w / 2)
+    love.graphics.setColor(self.beard.r, self.beard.g, self.beard.b)
+    love.graphics.draw(self.beard_image, self.x + self.w / 2, self.y, 0, self.dir, 1, self.w / 2)
   end
 
   function player:throw()

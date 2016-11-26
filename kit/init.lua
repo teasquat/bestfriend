@@ -5,7 +5,9 @@ state  = require("kit/lib/state")
 konami = require("kit/lib/konami")
 light  = require("kit/lib/light")
 bump   = require("kit/lib/bump")
+cam_m = require("kit/lib/camera")
 
+camera      = cam_m.make(0, 0, 1, 1, 0)
 world       = bump.newWorld()
 light_world = light({
   ambient = {
@@ -71,11 +73,13 @@ function love.run()
 
       love.graphics.origin()
 
+      camera:set()
       shack:apply()
       --light_world:draw(function()
         love.graphics.setColor(255, 255, 255)
         state:draw()
       --end)
+      camera:unset()
 
       love.graphics.present()
     end

@@ -2,6 +2,10 @@ local game = state:new()
 
 love.graphics.setBackgroundColor(255, 255, 255)
 
+function math.lerp(a, b, t)
+  return (1 - t) * a + t * b
+end
+
 -- handlers
 game_objects = {} -- all local game objects
 online_refs  = {} -- all references to to-be-submitted objects

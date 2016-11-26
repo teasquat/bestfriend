@@ -38,18 +38,20 @@ function pet_factory.make(x, y, path)
       -- friction
       self.dx = self.dx - (self.dx / self.frcx) * dt
       self.dy = self.dy - (self.dy / self.frcy) * dt
-    end
 
-    self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, ignore_filter)
+      self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, ignore_filter)
 
-    for i, v in ipairs(self.cols) do
-      if v.normal.y ~= 0 then
-        self.dy = 0
+      for i, v in ipairs(self.cols) do
+        if v.normal.y ~= 0 then
+          self.dy = 0
+        end
+
+        if v.normal.x ~= 0 then
+          self.dx = 0
+        end
       end
-
-      if v.normal.x ~= 0 then
-        self.dx = 0
-      end
+    else
+      world:update(self, self.x, self.y)
     end
 
     if self.health > 0 then

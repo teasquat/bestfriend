@@ -3,7 +3,7 @@ local food_factory = {}
 function food_factory.make(x,y)
   local food = {
     x = x, y = y,
-    w = 8, h = 8,
+    w = 8, h = 8
   }
 
   function food:load ()

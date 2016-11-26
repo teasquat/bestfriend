@@ -66,6 +66,10 @@ function game.load()
   for i, v in ipairs(game_objects) do
     v:load()
   end
+
+  table.sort(game_objects, function(a, b)
+    return (a.frontness or 0) < (b.frontness or 0)
+  end)
 end
 
 function game.update(dt)

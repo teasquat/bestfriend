@@ -36,6 +36,8 @@ pets = {
   [8] = "penguin",
   [9] = "pig",
   [10] = "dog",
+  [11] = "turtle",
+  [12] = "duck",
 }
 
 function game.load()

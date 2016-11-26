@@ -60,6 +60,10 @@ function player_factory.make(x, y)
     self.index = self.index + dt * 2 * self.dx
     self.dir = math.sign(self.dx) or self.dir
 
+    if self.picked_up then
+      self.pet.dir = self.dir
+    end
+
     local still = self.dx < 0.005 and self.dx > -0.005
 
     if self.picked_up then

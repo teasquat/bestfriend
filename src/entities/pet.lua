@@ -22,6 +22,10 @@ function pet_factory.make(x, y, path)
     picked_up = true,
     -- status
     status = "ignore",
+    dir = 1,
+    -- animation
+    blink = {},
+    index = 1,
   }
 
   function pet.filter(item, other)
@@ -31,13 +35,20 @@ function pet_factory.make(x, y, path)
     return "slide"
   end
 
-  pet.img = love.graphics.newImage("assets/pet/" .. path .. ".png")
-
   function pet:load()
     world:add(self,self.x,self.y,self.w,self.h)
+
+    self.blink[1] = love.graphics.newImage("assets/pet/" .. path .. ".png")
+    self.blink[2] = love.graphics.newImage("assets/pet/" .. path .. "_.png")
   end
 
   function pet:update(dt)
+    if math.floor(self.index % #self.blink) + 1 == 1 then
+      self.index = self.index + dt / 2
+    else
+      self.index = self.index + dt * 3
+    end
+
     if not self.picked_up then
       self.dy = self.dy + self.g * dt
       self.dy = self.dy - (self.dy / self.frcy) * dt
@@ -68,7 +79,7 @@ function pet_factory.make(x, y, path)
 
   function pet:draw()
     love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(self.img, self.x, self.y)
+    love.graphics.draw(self.blink[math.floor(self.index % #self.blink) + 1], self.x + self.w / 2, self.y, 0, self.dir, 1, self.w / 2)
 
     love.graphics.setColor(255, 0, 0)
     love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, 40, 4)

@@ -2,6 +2,7 @@ local pet_factory = {}
 
 function pet_factory.make(x, y, path)
   local pet = {
+    frontness = 100,
     x = x, y = y,
     w = 16, h = 16,
     -- velocity
@@ -15,7 +16,8 @@ function pet_factory.make(x, y, path)
     frcx = 1.5,  -- friction x
     frcy = 1.5,  -- friction y
     --
-    health = 100,
+    health       = 100,
+    health_decay = 3,   -- health to lose pr. second
 
     picked_up = true,
     -- status
@@ -24,6 +26,8 @@ function pet_factory.make(x, y, path)
     -- animation
     blink = {},
     index = 1,
+    -- konami
+    rainbow_stuff = false,
   }
 
   function pet.filter(item, other)
@@ -76,19 +80,27 @@ function pet_factory.make(x, y, path)
       world:update(self, self.x, self.y)
     end
 
-    if self.health > 0 then
-      self.health = self.health - 10 * dt
+    if self.health > 0 and not self.rainbow_stuff then
+      self.health = self.health - self.health_decay * dt
     end
   end
 
   function pet:draw()
-    love.graphics.setColor(255, 255, 255)
+    if self.rainbow_stuff then
+      love.graphics.setColor(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+    else
+      love.graphics.setColor(255, 255, 255)
+    end
     love.graphics.draw(self.blink[math.floor(self.index % #self.blink) + 1], self.x + self.w / 2, self.y, 0, self.dir, 1, self.w / 2)
 
     love.graphics.setColor(255, 0, 0)
     love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, 40, 4)
+
     love.graphics.setColor(0, 255, 0)
     love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, (self.health / 100) * 40, 4)
+
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("line", self.x + self.w / 2 - 20, self.y - self.h / 2.25, 40, 4)
   end
 
   function pet:socket()

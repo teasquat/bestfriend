@@ -1,110 +1,89 @@
-local konami = {
-  name = "konami",
-  instances = {},
-}
+local lovemi = {name = "lovemi", instances = {}}
+lovemi.__index = lovemi
 
-setmetatable(konami, konami)
+function lovemi.add(f)
 
-function konami.add(f)
-  assert(f and f.pattern, "Why would you add a pattern ... with no pattern?")
+  assert(f and f.pattern, "Pattern required")
 
-  local obj = f
-  setmetatable(obj, konami)
+  local lovemiObj = f
+  setmetatable(lovemiObj, lovemi)
 
-  obj.enabled = true
-  obj.active  = false
+  lovemiObj.enabled = true
+  lovemiObj.active = false
 
-  obj.time, obj.current = 0, 0
+  lovemiObj.time, lovemiObj.current = 0, 0
 
-  table.insert(konami.instances, obj)
+  table.insert(lovemi.instances, lovemiObj)
 
-  return obj
+  return lovemiObj
 end
 
-function konami:update_self(dt)
+function lovemi:updateSelf(dt)
   if self.active and self.duration then
     self.time = self.time + dt
-
     if self.time > self.duration then
-      self.active  = false
+      self.active = false
       self.current = 0
-
-      if self.on_end then
-        self.on_end()
-      end
+      if self.onEnd then self.onEnd() end
     end
   end
 end
 
-function konami:keypressed_self(key)
+function lovemi:keypressedSelf(key, isrepeat)
   if not self.active then
     if key == self.pattern[self.current + 1] then
       self.current = self.current + 1
-
-      if self.on_success then
-        self.on_success()
-      end
+      if self.onSuccess then self.onSuccess() end
 
       if self.current == #self.pattern then
-        self.active  = self.duration or false
+        self.active = self.duration and true or false
         self.current = self.duration and self.current or 0
         self.time = 0
-
-        if self.on_start then
-          self.on_start()
-        end
+        if self.onStart then self.onStart() end
       end
     elseif self.current ~= 0 then
       self.current = 0
-
-      if self.on_fail then
-        self.on_fail()
-      end
+      if self.onFail then self.onFail() end
     end
   end
 end
 
-function konami.update(dt)
-  for i = #konami.instances, 1, -1 do
-    if konami.instances[i] then
-      konami.instances[i]:update_self(dt)
+function lovemi.update(dt)
+  for i = #lovemi.instances, 1, -1 do
+    if lovemi.instances[i] then
+      lovemi.instances[i]:updateSelf(dt)
     end
   end
 end
 
-function konami:get_length()
+function lovemi:getLength()
   return #self.pattern
 end
 
-function konami:get_position()
+function lovemi:getPosition()
   return self.current
 end
 
-function konami:is_active()
+function lovemi:isActive()
   return self.active
 end
 
-function konami:remove()
-  for i = #konami.instances, 1, -1 do
-    if konami.instances[i] == self then
-      table.remove(konami.instances, i)
-      self = nil
+function lovemi:remove()
+  for i = #lovemi.instances, 1, -1 do
+    if lovemi.instances[i] == self then table.remove(lovemi.instances, i) self = nil end
+  end
+end
+
+function lovemi.clear()
+  for i = 1, #lovemi.instances do lovemi.instances[i] = nil end
+end
+
+function lovemi.keypressed(key, isrepeat)
+  for i = #lovemi.instances, 1, -1 do
+    if lovemi.instances[i] then
+      lovemi.instances[i]:keypressedSelf(key, isrepeat)
     end
   end
 end
 
-function konami.clear()
-  for i = 1, #konami.instances do
-    konami.instances[i] = nil
-  end
-end
-
-function konami.keypressed(key)
-  for i = #konami.instances, 1, -1 do
-    if konami.instances[i] then
-      konami.instances[i]:keypressed_self(key)
-    end
-  end
-end
-
-return konami
+return lovemi

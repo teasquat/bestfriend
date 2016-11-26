@@ -1,6 +1,6 @@
 local game = state:new()
 
-love.graphics.setBackgroundColor(255, 255, 255)
+love.graphics.setBackgroundColor(130, 220, 250)
 
 function math.lerp(a, b, t)
   return (1 - t) * a + t * b
@@ -86,7 +86,6 @@ function game.update(dt)
 end
 
 function game.draw()
-  love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
   for i, v in ipairs(game_objects) do
     if v.draw then
       v:draw()

@@ -2,47 +2,48 @@ local player_factory = {}
 
 function player_factory.make(x, y)
   local player = {
-      x = x, y = y,
-      -- velocity
-      dx = 0,
-      dy = 0,
-      -- movement
-      acc  = 30,   -- acceleration
-      frcx = 0.1,  -- friction x
-      frcy = 1.5,  -- friction y
-      -- (kinda-lol) static
-      w = 16,     -- width
-      h = 16,     -- height
+    frontness = 100,
+    x = x, y = y,
+    -- velocity
+    dx = 0,
+    dy = 0,
+    -- movement
+    acc  = 30,   -- acceleration
+    frcx = 0.1,  -- friction x
+    frcy = 1.5,  -- friction y
+    -- (kinda-lol) static
+    w = 16,     -- width
+    h = 16,     -- height
 
-      right = "right",
-      left  = "left",
-      jump  = "x",
-      pew   = "c",
-      -- jumping
-      grounded   = false,  -- whether or not am touching ground
-      jump_force = 7,      -- how much force to apply when normal jumping
-      -- wall jumping
-      wall_force = 6,      -- how much force to apply when wall jumping
-      wall       = 0,
-      -- static
-      gravity    = 30,
-      -- pet stuff
-      pet = nil,
-      picked_up = true,
-      -- status
-      status = "ignore",
-      -- animation
-      walk      = {},
-      walk_n    = {},
-      neutral   = {},
-      neutral_n = {},
+    right = "right",
+    left  = "left",
+    jump  = "x",
+    pew   = "c",
+    -- jumping
+    grounded   = false,  -- whether or not am touching ground
+    jump_force = 7,      -- how much force to apply when normal jumping
+    -- wall jumping
+    wall_force = 6,      -- how much force to apply when wall jumping
+    wall       = 0,
+    -- static
+    gravity    = 30,
+    -- pet stuff
+    pet = nil,
+    picked_up = true,
+    -- status
+    status = "ignore",
+    -- animation
+    walk      = {},
+    walk_n    = {},
+    neutral   = {},
+    neutral_n = {},
 
-      index   = 1,
-      dir     = 1,
-      tshirt = {},
-      beard = {},
-      tshirt_image = nil,
-      beard_image = nil
+    index   = 1,
+    dir     = 1,
+    tshirt = {},
+    beard = {},
+    tshirt_image = nil,
+    beard_image = nil
   }
 
   function player:load()
@@ -62,9 +63,20 @@ function player_factory.make(x, y)
     self.beard = {r = math.random(50, 230), g = math.random(50, 230), b=math.random(50, 230) }
     self.tshirt_image = love.graphics.newImage("assets/cosmetics/tshirt" .. math.random(1,2) .. ".png")
     self.beard_image = love.graphics.newImage("assets/cosmetics/beard1.png")
+
+    -- bad konami stuff
+    local pet_ref = self.pet
+    self.konami_rainbow = konami.add({
+      pattern = {"left", "right", "right", "left", "x", "x", "c", "x"},
+      onStart = function()
+        pet_ref.rainbow_stuff = true
+      end,
+    })
   end
 
   function player:update(dt)
+    konami.update(dt)
+
     self.index = self.index + dt * 2 * self.dx
     self.dir = math.sign(self.dx) or self.dir
 
@@ -195,6 +207,7 @@ function player_factory.make(x, y)
   end
 
   function player:press(key, isrepeat)
+    konami.keypressed(key, isrepeat)
     if key == self.jump then
       if self.grounded then
         self.dy = -self.jump_force

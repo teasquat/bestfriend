@@ -15,6 +15,9 @@ function pet_factory.make(x, y, path)
     g = 30, -- gravity
 
     health = 100,
+
+    player = nil,
+    picked_up = true
   }
 
   pet.img = love.graphics.newImage(path)
@@ -24,9 +27,12 @@ function pet_factory.make(x, y, path)
   end
 
   function pet:update(dt)
-    self.dy = self.dy + self.g * dt
-    self.dy = self.dy - (self.dy / self.frcy) * dt
-
+    if picked_up == true then
+      self.y = player.y - 32
+    else
+      self.dy = self.dy + self.g * dt
+      self.dy = self.dy - (self.dy / self.frcy) * dt
+    end
     self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy)
 
     if self.health > 0 then
@@ -39,9 +45,9 @@ function pet_factory.make(x, y, path)
     love.graphics.draw(self.img, self.x, self.y)
 
     love.graphics.setColor(255, 0, 0)
-    love.graphics.rectangle("fill", self.x - 25, self.y - 30, 50, 10)
+    love.graphics.rectangle("fill", self.x - 20, self.y - 15, 50, 5)
     love.graphics.setColor(0, 255, 0)
-    love.graphics.rectangle("fill", self.x - 25, self.y - 30, self.health /2, 10)
+    love.graphics.rectangle("fill", self.x - 20, self.y - 15, self.health /2, 5)
   end
 
   return pet

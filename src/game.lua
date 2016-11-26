@@ -88,6 +88,7 @@ function make_player(x, y)
   table.insert(game_objects, player)
 
   player.pet = make_pet(x, y - 32)
+  player.pet.player = player
 end
 
 function make_block(x, y, path, w, h) -- path is image

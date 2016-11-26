@@ -6,6 +6,15 @@ function math.lerp(a, b, t)
   return (1 - t) * a + t * b
 end
 
+function math.sign(n)
+  if n < 0 then
+    return -1
+  elseif n > 0 then
+    return 1
+  end
+  return nil
+end
+
 function ignore_filter(item, other)
   if other.status == "ignore" then
     return "cross"
@@ -16,6 +25,18 @@ end
 -- handlers
 game_objects = {} -- all local game objects
 online_refs  = {} -- all references to to-be-submitted objects
+pets = {
+  [1] = "cat1",
+  [2] = "cat2",
+  [3] = "cat3",
+  [4] = "cat4",
+  [5] = "deer",
+  [6] = "fish",
+  [7] = "parrot",
+  [8] = "penguin",
+  [9] = "pig",
+  [10] = "dog",
+}
 
 online = false
 
@@ -28,6 +49,8 @@ t = 0
 update_time = 0.1
 
 function game.load()
+  math.randomseed(os.time())
+
   game_objects = {}
 
   camera.sx, camera.sy = 0.35, 0.35
@@ -125,7 +148,7 @@ end
 
 function make_pet(x, y) -- path is image
   local pet_factory = require("src/entities/pet")
-  local pet         = pet_factory.make(x, y, "assets/pet/fish.png")
+  local pet         = pet_factory.make(x, y, pets[math.floor(math.random(1, #pets))])
 
   table.insert(game_objects, pet)
 

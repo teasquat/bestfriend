@@ -76,7 +76,7 @@ function player_factory.make(x, y)
             shake = 0
           end
 
-          shack:set_shake(shake)
+          --shack:set_shake(shake)
 
           self.grounded = true
         end

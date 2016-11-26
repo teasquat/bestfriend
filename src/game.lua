@@ -14,14 +14,7 @@ function game.load()
   game_objects = {}
 
   -- TODO: make level stuff
-  local player_factory = require("src/entities/player")
-  table.insert(game_objects, player_factory.make(100, 100))
-
-  local block_factory  = require("src/entities/block")
-  table.insert(game_objects, block_factory.make(100, 400, love.graphics.getWidth(), 64))
-
-  local pet_factory = require("src/entities/pet")
-  table.insert(game_objects,pet_factory.make(200,100))
+  make_level(love.graphics.newImage("assets/levels/demo.png"):getData())
 
   for i, v in ipairs(game_objects) do
     v:load()
@@ -63,6 +56,35 @@ end
 
 function game.unload()
 
+end
+
+-- misc functions
+function make_level(image_data)
+  for x = 1, image_data:getWidth() do
+    for y = 1, image_data:getHeight() do
+      local r, g, b, a = image_data:getPixel(x - 1, y - 1)
+
+      if r + g + b == 0 then
+        make_block(x * 16, y * 16, "assets/sheets/grass.png", 16, 16)
+      elseif r == 255 and g == 0 and b == 0 then
+        make_player(x * 16, y * 16)
+      end
+    end
+  end
+end
+
+function make_player(x, y)
+  local player_factory = require("src/entities/player")
+  local player         = player_factory.make(x, y)
+
+  table.insert(game_objects, player)
+end
+
+function make_block(x, y, path, w, h) -- path is image
+  local block_factory = require("src/entities/block")
+  local block         = block_factory.make(x, y, w or 16, h or 16)
+
+  table.insert(game_objects, block)
 end
 
 return game

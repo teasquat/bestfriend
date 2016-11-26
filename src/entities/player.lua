@@ -50,7 +50,7 @@ function player_factory.make(x, y)
 
     local ww, wh = camera:view_dimensions()
     camera.x = math.lerp(camera.x, self.x - ww / 2, dt * 3) -- interpolate camera towards player
-    camera.y = math.lerp(camera.y, self.y - wh / 3, dt) -- interpolate camera towards player
+    camera.y = math.lerp(camera.y, self.y - wh / 1.45, dt) -- interpolate camera towards player
 
     for i, v in ipairs(self.cols) do
       if v.normal.y ~= 0 then

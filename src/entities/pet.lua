@@ -49,7 +49,6 @@ function pet_factory.make(x, y, path)
 
     if not self.picked_up then
       self.dy = self.dy + self.g * dt
-      self.dy = self.dy - (self.dy / self.frcy) * dt
 
       -- friction
       self.dx = self.dx - (self.dx / self.frcx) * dt
@@ -58,6 +57,10 @@ function pet_factory.make(x, y, path)
       self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, self.filter)
 
       for i, v in ipairs(self.cols) do
+        if v.other.status == "food" then
+          self.health = self.health + 50
+          v.other:die()
+        end
         if v.normal.y ~= 0 then
           self.dy = 0
         end

@@ -32,11 +32,13 @@ pets = {
   [4] = "cat4",
   [5] = "deer",
   [6] = "fish",
-  [7] = "penguin",
-  [8] = "pig",
-  [9] = "dog",
-  [10] = "turtle",
-  [11] = "duck",
+  [7] = "parrot",
+  [8] = "penguin",
+  [9] = "pig",
+  [10] = "dog",
+  [11] = "turtle",
+  [12] = "duck",
+  [13] = "bear",
 }
 
 online = false

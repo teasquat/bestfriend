@@ -16,8 +16,20 @@ end
 -- handlers
 game_objects = {} -- all local game objects
 online_refs  = {} -- all references to to-be-submitted objects
+pets = {
+  [1] = "cat1",
+  [2] = "cat2",
+  [3] = "cat3",
+  [4] = "cat4",
+  [5] = "deer",
+  [6] = "fish",
+  [7] = "parrot",
+  [8] = "penguin",
+}
 
 function game.load()
+  math.randomseed(os.time())
+
   game_objects = {}
 
   camera.sx, camera.sy = 0.35, 0.35
@@ -106,7 +118,7 @@ end
 
 function make_pet(x, y) -- path is image
   local pet_factory = require("src/entities/pet")
-  local pet         = pet_factory.make(x, y, "assets/pet/fish.png")
+  local pet         = pet_factory.make(x, y, pets[math.floor(math.random(1, #pets))])
 
   table.insert(game_objects, pet)
 

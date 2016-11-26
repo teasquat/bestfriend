@@ -14,8 +14,8 @@ function pet_factory.make(x, y, path)
     -- static
     g = 30, -- gravity
     -- movement
-    frcx = 0.1,  -- friction x
-    frcy = 1.5,  -- friction y
+    frcx = 2,  -- friction x
+    frcy = 2,  -- friction y
     --
     health = 100,
 
@@ -24,7 +24,14 @@ function pet_factory.make(x, y, path)
     status = "ignore",
   }
 
-  pet.img = love.graphics.newImage(path)
+  function pet.filter(item, other)
+    if other.status == "ignore" then
+      return
+    end
+    return "slide"
+  end
+
+  pet.img = love.graphics.newImage("assets/pet/" .. path .. ".png")
 
   function pet:load()
     world:add(self,self.x,self.y,self.w,self.h)
@@ -38,18 +45,20 @@ function pet_factory.make(x, y, path)
       -- friction
       self.dx = self.dx - (self.dx / self.frcx) * dt
       self.dy = self.dy - (self.dy / self.frcy) * dt
-    end
 
-    self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, ignore_filter)
+      self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, self.filter)
 
-    for i, v in ipairs(self.cols) do
-      if v.normal.y ~= 0 then
-        self.dy = 0
+      for i, v in ipairs(self.cols) do
+        if v.normal.y ~= 0 then
+          self.dy = 0
+        end
+
+        if v.normal.x ~= 0 then
+          self.dx = 0
+        end
       end
-
-      if v.normal.x ~= 0 then
-        self.dx = 0
-      end
+    else
+      world:update(self, self.x, self.y)
     end
 
     if self.health > 0 then

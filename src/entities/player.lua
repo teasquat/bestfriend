@@ -93,6 +93,7 @@ function player_factory.make(x, y)
         end
       end
     end
+
     if self.picked_up then
       self.pet.y = self.y - self.h
       self.pet.x = self.x
@@ -110,8 +111,24 @@ function player_factory.make(x, y)
       self.picked_up     = false
       self.pet.picked_up = false
 
-      self.pet.dx = self.dx * 10
-      self.pet.dy = self.dy * 5
+      local throw_x, throw_y = self.dx, self.dy
+
+      if throw_x + throw_y < 0.5 and throw_x + throw_y > -0.5 then
+        if throw_y < 0.005 and throw_y > -0.005 then
+          throw_y = throw_y - 1.5
+        end
+
+        if throw_x < 0.5 and throw_x > -0.5 then
+          throw_x = throw_x * 10
+        end
+
+        if throw_y < 0.5 and throw_y > -0.5 then
+          throw_y = throw_y * 10
+        end
+      end
+
+      self.pet.dx = throw_x * 5
+      self.pet.dy = throw_y * 5
     end
   end
 

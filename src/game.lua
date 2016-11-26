@@ -40,6 +40,16 @@ pets = {
   [12] = "duck",
 }
 
+online = false
+
+if online then
+  local socket = require "socket"
+  client = socket.tcp()
+  client:connect("localhost", 7788) -- change to server ip
+end
+t = 0
+update_time = 0.1
+
 function game.load()
   math.randomseed(os.time())
 
@@ -59,6 +69,15 @@ function game.update(dt)
   for i, v in ipairs(game_objects) do
     if v.update then
       v:update(dt)
+    end
+  end
+
+  t = t + dt
+  if online and t > update_time then
+    for i, v in ipairs(game_objects) do
+      if v.socket then
+        v:socket()
+      end
     end
   end
 end
@@ -106,6 +125,7 @@ function make_level(image_data)
         make_block(x * 16, y * 16, "assets/stone.png", 16, 16)
       elseif r == 0 and g == 0 and b == 0 then
         make_player(x * 16, y * 16)
+        make_food(x*16 + 16, y*16)
       elseif r == 255 and g == 255 and b == 0 then
         make_pet(x * 16, y * 16)
       end
@@ -136,6 +156,14 @@ function make_pet(x, y) -- path is image
   table.insert(game_objects, pet)
 
   return pet
+end
+
+function make_food(x,y)
+  local food_factory = require ("src/entities/food")
+  local food = food_factory.make(x,y)
+
+  table.insert(game_objects, food)
+  return food
 end
 
 return game

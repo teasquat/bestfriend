@@ -168,7 +168,6 @@ function player_factory.make(x, y)
           throw_y = throw_y * 10
         end
       end
-
       self.pet.dx = throw_x * 5
       self.pet.dy = throw_y * 5
     end
@@ -198,6 +197,10 @@ function player_factory.make(x, y)
         self:pick_up()
       end
     end
+  end
+
+  function player:socket()
+    client:send("pl_" .. self.x .. ":" .. self.y .. ":" .. self.dx .. ":" .. self.dy .. "\n")
   end
 
   return player

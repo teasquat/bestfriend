@@ -6,6 +6,16 @@ function math.lerp(a, b, t)
   return (1 - t) * a + t * b
 end
 
+function math.clamp(a, b, x)
+  if x < a then
+    return b
+  elseif x > b then
+    return b
+  end
+
+  return x
+end
+
 function math.sign(n)
   if n < 0 then
     return -1

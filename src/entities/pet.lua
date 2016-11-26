@@ -83,6 +83,8 @@ function pet_factory.make(x, y, path)
     if self.health > 0 and not self.rainbow_stuff then
       self.health = self.health - self.health_decay * dt
     end
+
+    self.health = math.clamp(0, 100, self.health)
   end
 
   function pet:draw()

@@ -193,7 +193,7 @@ function player_factory.make(x, y)
         end
       end
       self.pet.dx = throw_x * 5
-      self.pet.dy = throw_y * 5
+      self.pet.dy = throw_y * 4
     end
   end
 

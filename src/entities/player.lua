@@ -113,20 +113,18 @@ function player_factory.make(x, y)
 
       local throw_x, throw_y = self.dx, self.dy
 
-      if throw_x < 0.005 and throw_x > -0.005 then
-        throw_x = throw_x + 0.1
-      end
+      if throw_x + throw_y < 0.5 and throw_x + throw_y > -0.5 then
+        if throw_y < 0.005 and throw_y > -0.005 then
+          throw_y = throw_y - 1.5
+        end
 
-      if throw_y < 0.005 and throw_y > -0.005 then
-        throw_y = throw_y - 0.6
-      end
+        if throw_x < 0.5 and throw_x > -0.5 then
+          throw_x = throw_x * 10
+        end
 
-      if throw_x < 0.5 and throw_x > -0.5 then
-        throw_x = throw_x * 10
-      end
-
-      if throw_y < 0.5 and throw_y > -0.5 then
-        throw_y = throw_y * 10
+        if throw_y < 0.5 and throw_y > -0.5 then
+          throw_y = throw_y * 10
+        end
       end
 
       self.pet.dx = throw_x * 10

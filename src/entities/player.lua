@@ -17,6 +17,7 @@ function player_factory.make(x, y)
       right = "right",
       left  = "left",
       jump  = "x",
+      pew   = "c",
       -- jumping
       grounded   = false,  -- whether or not am touching ground
       jump_force = 7,      -- how much force to apply when normal jumping
@@ -104,6 +105,25 @@ function player_factory.make(x, y)
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
   end
 
+  function player:throw()
+    if self.picked_up then
+      self.picked_up     = false
+      self.pet.picked_up = false
+
+      self.pet.dx = self.dx * 10
+      self.pet.dy = self.dy * 5
+    end
+  end
+
+  function player:pick_up()
+    for i, v in ipairs(self.cols) do
+      if v.other == self.pet then
+        self.picked_up     = true
+        self.pet.picked_up = true
+      end
+    end
+  end
+
   function player:press(key, isrepeat)
     if key == self.jump then
       if self.grounded then
@@ -111,6 +131,12 @@ function player_factory.make(x, y)
       elseif self.wall ~= 0 then
         self.dy = -self.wall_force
         self.dx = self.wall_force / 1.5 * self.wall
+      end
+    elseif key == self.pew then
+      if self.picked_up then
+        self:throw()
+      else
+        self:pick_up()
       end
     end
   end

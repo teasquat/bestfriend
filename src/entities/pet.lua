@@ -13,10 +13,12 @@ function pet_factory.make(x, y, path)
     frcy = 1.5,  -- friction y
     -- static
     g = 30, -- gravity
-
+    -- movement
+    frcx = 0.1,  -- friction x
+    frcy = 1.5,  -- friction y
+    --
     health = 100,
 
-    player = nil,
     picked_up = true,
     -- status
     status = "ignore",
@@ -32,8 +34,23 @@ function pet_factory.make(x, y, path)
     if not self.picked_up then
       self.dy = self.dy + self.g * dt
       self.dy = self.dy - (self.dy / self.frcy) * dt
+
+      -- friction
+      self.dx = self.dx - (self.dx / self.frcx) * dt
+      self.dy = self.dy - (self.dy / self.frcy) * dt
     end
+
     self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, ignore_filter)
+
+    for i, v in ipairs(self.cols) do
+      if v.normal.y ~= 0 then
+        self.dy = 0
+      end
+
+      if v.normal.x ~= 0 then
+        self.dx = 0
+      end
+    end
 
     if self.health > 0 then
       self.health = self.health - 10 * dt
@@ -45,9 +62,9 @@ function pet_factory.make(x, y, path)
     love.graphics.draw(self.img, self.x, self.y)
 
     love.graphics.setColor(255, 0, 0)
-    love.graphics.rectangle("fill", self.x - 20, self.y - 15, 50, 5)
+    love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, 40, 4)
     love.graphics.setColor(0, 255, 0)
-    love.graphics.rectangle("fill", self.x - 20, self.y - 15, self.health /2, 5)
+    love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, (self.health / 100) * 40, 4)
   end
 
   return pet

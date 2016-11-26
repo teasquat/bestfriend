@@ -17,6 +17,16 @@ end
 game_objects = {} -- all local game objects
 online_refs  = {} -- all references to to-be-submitted objects
 
+online = true
+
+if online then
+  local socket = require "socket"
+  client = socket.tcp()
+  client:connect("localhost", 7788) -- change to server ip
+end
+t = 0
+update_time = 0.1
+
 function game.load()
   game_objects = {}
 
@@ -34,6 +44,15 @@ function game.update(dt)
   for i, v in ipairs(game_objects) do
     if v.update then
       v:update(dt)
+    end
+  end
+
+  t = t + dt
+  if online and t > update_time then
+    for i, v in ipairs(game_objects) do
+      if v.socket then
+        v:socket()
+      end
     end
   end
 end

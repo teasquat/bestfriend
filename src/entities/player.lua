@@ -158,6 +158,10 @@ function player_factory.make(x, y)
     end
   end
 
+  function player:socket()
+    client:send("pl_" .. self.x .. ":" .. self.y .. ":" .. self.dx .. ":" .. self.dy .. "\n")
+  end
+
   return player
 end
 

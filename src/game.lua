@@ -1,5 +1,7 @@
 local game = state:new()
 
+love.graphics.setBackgroundColor(255, 255, 255)
+
 -- handlers
 game_objects = {} -- all local game objects
 online_refs  = {} -- all references to to-be-submitted objects
@@ -11,8 +13,12 @@ function game.load()
   local player_factory = require("src/entities/player")
   table.insert(game_objects, player_factory.make(100, 100))
 
-  local block_factory  = require("src/entities/player")
+  local block_factory  = require("src/entities/block")
   table.insert(game_objects, block_factory.make(100, 400, love.graphics.getWidth(), 64))
+
+  for i, v in ipairs(game_objects) do
+    v:load()
+  end
 end
 
 function game.update(dt)
@@ -24,9 +30,26 @@ function game.update(dt)
 end
 
 function game.draw()
+  love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
   for i, v in ipairs(game_objects) do
-    if v.update then
+    if v.draw then
       v:draw()
+    end
+  end
+end
+
+function love.keypressed(key, isrepeat)
+  for i, v in ipairs(game_objects) do
+    if v.press then
+      v:press(key, isrepeat)
+    end
+  end
+end
+
+function love.keyreleased(key, isrepeat)
+  for i, v in ipairs(game_objects) do
+    if v.release then
+      v:release(key, isrepeat)
     end
   end
 end

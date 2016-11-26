@@ -72,10 +72,10 @@ function love.run()
       love.graphics.origin()
 
       shack:apply()
-      light_world:draw(function()
+      --light_world:draw(function()
         love.graphics.setColor(255, 255, 255)
         state:draw()
-      end)
+      --end)
 
       love.graphics.present()
     end

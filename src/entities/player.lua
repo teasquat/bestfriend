@@ -8,7 +8,7 @@ function player_factory.make(x, y)
       dy = 0,
       -- movement
       acc  = 30,   -- acceleration
-      frcx = 0.5,  -- friction x
+      frcx = 0.15,  -- friction x
       frcy = 1.5,  -- friction y
       -- (kinda) static
       w = 16,     -- width
@@ -19,7 +19,9 @@ function player_factory.make(x, y)
       jump  = "x",
       -- jumping
       grounded   = false,  -- whether or not am touching ground
-      jump_force = 20,     -- how much force
+      jump_force = 10,     -- how much force
+      --static
+      gravity    = 30,
   }
 
   function player:load()
@@ -35,6 +37,7 @@ function player_factory.make(x, y)
       self.dx = self.dx - self.acc * dt
     end
 
+    self.dy = self.dy + self.gravity * dt
 
     -- friction
     self.dx = self.dx - (self.dx / self.frcx) * dt
@@ -42,6 +45,8 @@ function player_factory.make(x, y)
 
     -- movement
     self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy)
+
+    self.grounded = false
 
     for i, v in ipairs(self.cols) do
       if v.normal.y ~= 0 then
@@ -60,6 +65,14 @@ function player_factory.make(x, y)
     -- TODO: make good graphics
     love.graphics.setColor(255, 0, 0)
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+  end
+
+  function player:press(key, isrepeat)
+    if key == self.jump then
+      if self.grounded then
+        self.dy = -self.jump_force
+      end
+    end
   end
 
   return player

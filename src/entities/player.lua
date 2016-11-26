@@ -19,8 +19,11 @@ function player_factory.make(x, y)
       jump  = "x",
       -- jumping
       grounded   = false,  -- whether or not am touching ground
-      jump_force = 7,     -- how much force
-      --static
+      jump_force = 7,      -- how much force to apply when normal jumping
+      -- wall jumping
+      wall_force = 6,      -- how much force to apply when wall jumping
+      wall       = 0,
+      -- static
       gravity    = 30,
   }
 
@@ -37,6 +40,8 @@ function player_factory.make(x, y)
       self.dx = self.dx - self.acc * dt
     end
 
+    self.dx = self.dx - self.wall * dt
+
     self.dy = self.dy + self.gravity * dt
 
     -- friction
@@ -52,6 +57,7 @@ function player_factory.make(x, y)
     camera.x = math.lerp(camera.x, self.x + self.w / 2 - ww / 2, dt * 3) -- interpolate camera towards player
     camera.y = math.lerp(camera.y, self.y + self.h / 2 - wh / 1.45, dt * 2.5) -- interpolate camera towards player
 
+    self.wall = 0
     for i, v in ipairs(self.cols) do
       if v.normal.y ~= 0 then
         if v.normal.y == -1 then
@@ -73,6 +79,10 @@ function player_factory.make(x, y)
 
       if v.normal.x ~= 0 then
         self.dx = 0
+
+        if not self.grounded then
+          self.wall = v.normal.x
+        end
       end
     end
   end
@@ -87,6 +97,9 @@ function player_factory.make(x, y)
     if key == self.jump then
       if self.grounded then
         self.dy = -self.jump_force
+      elseif self.wall ~= 0 then
+        self.dy = -self.wall_force
+        self.dx = self.wall_force / 1.5 * self.wall
       end
     end
   end

@@ -13,7 +13,7 @@ online_refs  = {} -- all references to to-be-submitted objects
 function game.load()
   game_objects = {}
 
-  camera.sx, camera.sy = 0.25, 0.25
+  camera.sx, camera.sy = 0.35, 0.35
 
   -- TODO: make level stuff
   make_level(love.graphics.newImage("assets/levels/demo.png"):getData())
@@ -70,6 +70,8 @@ function make_level(image_data)
         make_block(x * 16, y * 16, "assets/dirt.png", 16, 16)
       elseif r == 0 and g == 255 and b == 255 then
         make_block(x * 16, y * 16, "assets/grass.png", 16, 16)
+      elseif r == 0 and g == 0 and b == 255 then
+        make_block(x * 16, y * 16, "assets/stone.png", 16, 16)
       elseif r == 0 and g == 0 and b == 0 then
         make_player(x * 16, y * 16)
       elseif r == 255 and g == 255 and b == 0 then

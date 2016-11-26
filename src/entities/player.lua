@@ -10,7 +10,7 @@ function player_factory.make(x, y)
       acc  = 30,   -- acceleration
       frcx = 0.15,  -- friction x
       frcy = 1.5,  -- friction y
-      -- (kinda) static
+      -- (kinda-lol) static
       w = 16,     -- width
       h = 16,     -- height
 

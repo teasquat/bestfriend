@@ -16,6 +16,9 @@ function game.load()
   local block_factory  = require("src/entities/block")
   table.insert(game_objects, block_factory.make(100, 400, love.graphics.getWidth(), 64))
 
+  local pet_factory = require("src/entities/pet")
+  table.insert(game_objects,pet_factory.make(200,100))
+
   for i, v in ipairs(game_objects) do
     v:load()
   end

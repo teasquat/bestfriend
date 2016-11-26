@@ -6,6 +6,15 @@ function math.lerp(a, b, t)
   return (1 - t) * a + t * b
 end
 
+function math.sign(n)
+  if n < 0 then
+    return -1
+  elseif n > 0 then
+    return 1
+  end
+  return nil
+end
+
 function ignore_filter(item, other)
   if other.status == "ignore" then
     return "cross"
@@ -25,6 +34,8 @@ pets = {
   [6] = "fish",
   [7] = "parrot",
   [8] = "penguin",
+  [9] = "pig",
+  [10] = "dog",
 }
 
 function game.load()

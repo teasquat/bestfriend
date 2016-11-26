@@ -31,13 +31,51 @@ function player_factory.make(x, y)
       picked_up = true,
       -- status
       status = "ignore",
+      -- animation
+      walk      = {},
+      walk_n    = {},
+      neutral   = {},
+      neutral_n = {},
+
+      index   = 1,
+      dir     = 1,
   }
 
   function player:load()
     world:add(self, self.x, self.y, self.w, self.h)
+
+    self.walk[1] = love.graphics.newImage("assets/player/walk1.png")
+    self.walk[2] = love.graphics.newImage("assets/player/walk2.png")
+
+    self.walk_n[1] = love.graphics.newImage("assets/player/walk_n1.png")
+    self.walk_n[2] = love.graphics.newImage("assets/player/walk_n2.png")
+
+    self.neutral[1] = love.graphics.newImage("assets/player/neutral.png")
+    self.neutral_n[1] = love.graphics.newImage("assets/player/neutral_n.png")
+
+    self.current = self.walk
   end
 
   function player:update(dt)
+    self.index = self.index + dt * 2 * self.dx
+    self.dir = math.sign(self.dx) or self.dir
+
+    local still = self.dx < 0.005 and self.dx > -0.005
+
+    if self.picked_up then
+      if still then
+        self.current = self.neutral_n
+      else
+        self.current = self.walk
+      end
+    else
+      if still then
+        self.current = self.neutral
+      else
+        self.current = self.walk_n
+      end
+    end
+
     if love.keyboard.isDown(self.right) then
       self.dx = self.dx + self.acc * dt
     end
@@ -102,8 +140,8 @@ function player_factory.make(x, y)
 
   function player:draw()
     -- TODO: make good graphics
-    love.graphics.setColor(255, 0, 0)
-    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(self.current[math.floor(self.index % #self.current) + 1], self.x + self.w / 2, self.y, 0, self.dir, 1, self.w / 2)
   end
 
   function player:throw()
@@ -127,11 +165,7 @@ function player_factory.make(x, y)
         end
       end
 
-<<<<<<< HEAD
       self.pet.dx = throw_x * 5
-=======
-      self.pet.dx = throw_x * 10
->>>>>>> 0dcae81171385c5bb3519d43d5136a53bf219b9f
       self.pet.dy = throw_y * 5
     end
   end

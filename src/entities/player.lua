@@ -48,10 +48,17 @@ function player_factory.make(x, y)
 
     self.grounded = false
 
+    local ww, wh = camera:view_dimensions()
+    camera.x = math.lerp(camera.x, self.x - ww / 2, dt * 3) -- interpolate camera towards player
+
     for i, v in ipairs(self.cols) do
       if v.normal.y ~= 0 then
         if v.normal.y == -1 then
+
+          shack:set_shake(self.dy * 4)
+
           self.grounded = true
+          self.dy       = 0
         end
       end
 

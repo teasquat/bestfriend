@@ -30,6 +30,10 @@ function player_net_factory.make(x, y, dx, dy)
       dir     = 1,
   }
 
+  function player.filter(item, other)
+    return "cross"
+  end
+
   function player:load()
     world:add(self, self.x, self.y, self.w, self.h)
 
@@ -63,7 +67,7 @@ function player_net_factory.make(x, y, dx, dy)
     self.dy = self.dy - (self.dy / self.frcy) * dt
 
     -- movement
-    self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, ignore_filter)
+    self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, self.filter)
 
     self.grounded = false
 

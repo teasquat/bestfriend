@@ -59,7 +59,7 @@ if online then
   player_net_factory = require("src/entities/player_net")
   local socket = require "socket"
   client = socket.tcp()
-  client:connect("localhost", 7788) -- change to server ip
+  client:connect("192.168.43.13", 7788) -- change to server ip
   client:settimeout(0)
   math.randomseed(os.time())
   player_id = math.random(0,1000000)
@@ -70,7 +70,7 @@ if online then
   player_net = {}
 end
 t = 0
-update_time = 0.1
+update_time = 0.5
 
 function game.load()
   math.randomseed(os.time())

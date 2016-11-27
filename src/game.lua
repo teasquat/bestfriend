@@ -42,12 +42,21 @@ pets = {
   [14] = "tiger",
 }
 
-online = false
+online = true
 
 if online then
+  player_net_factory = require("src/entities/player_net")
   local socket = require "socket"
   client = socket.tcp()
   client:connect("localhost", 7788) -- change to server ip
+  client:settimeout(0)
+  math.randomseed(os.time())
+  player_id = math.random(0,1000000)
+
+  client:send("id_" .. player_id)
+
+  pet_net = {}
+  player_net = {}
 end
 t = 0
 update_time = 0.1
@@ -81,6 +90,39 @@ function game.update(dt)
         v:socket()
       end
     end
+
+    client:send("up_\n")
+
+    data, _, _ = client:receive()
+
+    while data do
+      if data == "done" then
+        break
+      end
+      action, id, value = data:match("(.*)_(.*)_(.*)")
+      x, y, dx, dy = value:match("(.*):(.*):(.*):(.*)")
+      x, y, dx, dy = tonumber(x), tonumber(y), tonumber(dx), tonumber(dy)
+      id = tonumber(id)
+      print(dx,dy)
+      if id ~= player_id then
+        if action == "pl" then
+          if player_net[id] then
+            player_net[id]:move(x, y, dx, dy)
+          else
+            player_net[id] = player_net_factory.make(x, y, dx, dy)
+            player_net[id]:load()
+          end
+        elseif action == "pt" then
+          --pet_net[id] = {x=tonumber(x), y=tonumber(y), dx=tonumber(dx), dy=tonumber(dy)}
+        end
+      end
+      data, _, _ = client:receive()
+    end
+  end
+
+  for k, v in pairs(player_net) do
+    print("update")
+    v:update(dt)
   end
 end
 
@@ -90,6 +132,11 @@ function game.draw()
     if v.draw then
       v:draw()
     end
+  end
+
+  love.graphics.setColor(0,0,0)
+  for k, v in pairs(player_net) do
+    v:draw()
   end
 end
 

@@ -1,11 +1,11 @@
 local player_net_factory = {}
 
-function player_factory.make(x, y)
+function player_net_factory.make(x, y, dx, dy)
   local player = {
       x = x, y = y,
       -- velocity
-      dx = 0,
-      dy = 0,
+      dx = dx,
+      dy = dy,
       -- movement
       acc  = 30,   -- acceleration
       frcx = 0.1,  -- friction x
@@ -21,10 +21,10 @@ function player_factory.make(x, y)
       -- status
       status = "ignore",
       -- animation
-      walk      = {},
-      walk_n    = {},
-      neutral   = {},
-      neutral_n = {},
+      walk      = {love.graphics.newImage("assets/player/walk1.png"), love.graphics.newImage("assets/player/walk2.png")},
+      walk_n    = {love.graphics.newImage("assets/player/walk_n1.png"), love.graphics.newImage("assets/player/walk_n2.png")},
+      neutral   = {love.graphics.newImage("assets/player/neutral.png")},
+      neutral_n = {love.graphics.newImage("assets/player/neutral_n.png")},
 
       index   = 1,
       dir     = 1,
@@ -33,25 +33,12 @@ function player_factory.make(x, y)
   function player:load()
     world:add(self, self.x, self.y, self.w, self.h)
 
-    self.walk[1] = love.graphics.newImage("assets/player/walk1.png")
-    self.walk[2] = love.graphics.newImage("assets/player/walk2.png")
-
-    self.walk_n[1] = love.graphics.newImage("assets/player/walk_n1.png")
-    self.walk_n[2] = love.graphics.newImage("assets/player/walk_n2.png")
-
-    self.neutral[1] = love.graphics.newImage("assets/player/neutral.png")
-    self.neutral_n[1] = love.graphics.newImage("assets/player/neutral_n.png")
-
     self.current = self.walk
   end
 
   function player:update(dt)
     self.index = self.index + dt * 2 * self.dx
     self.dir = math.sign(self.dx) or self.dir
-
-    if self.picked_up then
-      self.pet.dir = self.dir
-    end
 
     local still = self.dx < 0.005 and self.dx > -0.005
 
@@ -68,8 +55,6 @@ function player_factory.make(x, y)
         self.current = self.walk_n
       end
     end
-
-    self.dx = self.dx - self.wall * dt
 
     self.dy = self.dy + self.gravity * dt
 
@@ -101,16 +86,15 @@ function player_factory.make(x, y)
         end
       end
     end
-
-    if self.picked_up then
-      self.pet.y = self.y - self.h
-      self.pet.x = self.x
-    end
   end
 
   function player:draw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.current[math.floor(self.index % #self.current) + 1], self.x + self.w / 2, self.y, 0, self.dir, 1, self.w / 2)
+  end
+
+  function player:move(x, y, dx, dy)
+    self.x, self.y, self.dx, self.dy = x, y, dx, dy
   end
 
   return player

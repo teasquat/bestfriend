@@ -104,7 +104,7 @@ function pet_factory.make(x, y, path)
   end
 
   function pet:socket()
-    client:send("pt_" .. self.x .. ":" .. self.y .. ":" .. self.dx .. ":" .. self.dy .. "\n")
+    client:send("pt_" .. self.x .. ":" .. self.y .. ":" .. self.dx .. ":" .. self.dy .. ":" .. tostring(self.picked_up) .."\n")
   end
 
   return pet

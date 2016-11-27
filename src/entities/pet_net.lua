@@ -1,6 +1,6 @@
 local pet_factory = {}
 
-function pet_factory.make(x, y, dx, dy, path)
+function pet_factory.make(x, y, dx, dy, path, picked_up)
   local pet = {
     x = x, y = y,
     w = 16, h = 16,
@@ -15,7 +15,7 @@ function pet_factory.make(x, y, dx, dy, path)
     frcx = 1.5,  -- friction x
     frcy = 1.5,  -- friction y
 
-    picked_up = false,
+    picked_up = picked_up,
     -- status
     status = "ignore",
     dir = 1,
@@ -83,8 +83,8 @@ function pet_factory.make(x, y, dx, dy, path)
     love.graphics.draw(self.blink[math.floor(self.index % #self.blink) + 1], self.x + self.w / 2, self.y, 0, self.dir, 1, self.w / 2)
   end
 
-  function pet:move(x, y, dx, dy)
-    self.x, self.y, self.dx, self.dy = x, y, dx, dy
+  function pet:move(x, y, dx, dy, picked_up)
+    self.x, self.y, self.dx, self.dy, picked_up = x, y, dx, dy, picked_up
   end
 
   return pet

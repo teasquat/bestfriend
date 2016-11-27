@@ -32,6 +32,16 @@ function ignore_filter(item, other)
   return "slide"
 end
 
+function tobool(n)
+  if n=="true" then
+    return true
+  elseif n=="false" then
+    return false
+  else
+    return nil
+  end
+end
+
 -- handlers
 game_objects = {} -- all local game objects
 spawns       = {}
@@ -123,11 +133,13 @@ function game.update(dt)
           break
         end
         action, id, value = data:match("(.*)_(.*)_(.*)")
-        x, y, dx, dy = value:match("(.*):(.*):(.*):(.*)")
-        x, y, dx, dy = tonumber(x), tonumber(y), tonumber(dx), tonumber(dy)
         id = tonumber(id)
         if id ~= player_id then
           if action == "pl" then
+
+            x, y, dx, dy = value:match("(.*):(.*):(.*):(.*)")
+            x, y, dx, dy = tonumber(x), tonumber(y), tonumber(dx), tonumber(dy)
+
             if player_net[id] then
               player_net[id]:move(x, y, dx, dy)
             else
@@ -135,10 +147,12 @@ function game.update(dt)
               player_net[id]:load()
             end
           elseif action == "pt" then
+            x, y, dx, dy, pickup = value:match("(.*):(.*):(.*):(.*):(.*)")
+            x, y, dx, dy, pickup = tonumber(x), tonumber(y), tonumber(dx), tonumber(dy), tobool(pickup)
             if pet_net[id] then
-              pet_net[id]:move(x, y, dx, dy)
+              pet_net[id]:move(x, y, dx, dy, pickup)
             else
-              pet_net[id] = pet_net_factory.make(x, y, dx, dy, "turtle")
+              pet_net[id] = pet_net_factory.make(x, y, dx, dy, "turtle", pickup)
               pet_net[id]:load()
             end
           end

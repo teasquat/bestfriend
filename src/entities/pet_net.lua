@@ -84,7 +84,7 @@ function pet_factory.make(x, y, dx, dy, path, picked_up)
   end
 
   function pet:move(x, y, dx, dy, picked_up)
-    self.x, self.y, self.dx, self.dy, picked_up = x, y, dx, dy, picked_up
+    self.x, self.y, self.dx, self.dy, self.picked_up = x, y, dx, dy, picked_up
   end
 
   return pet

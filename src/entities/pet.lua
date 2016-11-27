@@ -16,7 +16,7 @@ function pet_factory.make(x, y, path)
     frcx = 1.5,  -- friction x
     frcy = 1.5,  -- friction y
     --
-    health       = 100,
+    health       = 0,
     health_decay = 3,   -- health to lose pr. second
 
     picked_up = true,
@@ -65,8 +65,12 @@ function pet_factory.make(x, y, path)
 
       for i, v in ipairs(self.cols) do
         if v.other.status == "food" then
-          self.health = self.health + 50
+          self.health = self.health + 10
           v.other:die()
+
+          if self.health >= 100 then
+            -- You win ... yay <4
+          end
         end
         if v.normal.y ~= 0 then
           self.dy = 0
@@ -80,8 +84,8 @@ function pet_factory.make(x, y, path)
       world:update(self, self.x, self.y)
     end
 
-    if self.health > 0 and not self.rainbow_stuff then
-      self.health = self.health - self.health_decay * dt
+    if self.rainbow_stuff then
+      self.health = self.health + self.health_decay * 3 * dt
     end
 
     self.health = math.clamp(0, 100, self.health)
@@ -100,6 +104,8 @@ function pet_factory.make(x, y, path)
 
     love.graphics.setColor(0, 255, 0)
     love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, (self.health / 100) * 40, 4)
+
+    love.graphics.setLineWidth(1)
 
     love.graphics.setColor(0, 0, 0)
     love.graphics.rectangle("line", self.x + self.w / 2 - 20, self.y - self.h / 2.25, 40, 4)

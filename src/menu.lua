@@ -45,7 +45,7 @@ function menu:load()
 
   myButton1 = uare.new({
     text = {
-      display = "alone-player"
+      display = "singleplayer"
     },
     onClick = function()
       state:switch("src/game", false)
@@ -71,7 +71,7 @@ function menu:update(dt)
 end
 
 function menu:draw()
- uare.draw()
+  uare.draw()
 end
 
 function love.textinput(t)

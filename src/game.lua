@@ -64,7 +64,7 @@ if online then
   math.randomseed(os.time())
   player_id = math.random(0,1000000)
 
-  client:send("id_" .. player_id)
+  client:send("id_" .. player_id .. "\n")
 
   pet_net = {}
   player_net = {}
@@ -118,7 +118,6 @@ function game.update(dt)
       x, y, dx, dy = value:match("(.*):(.*):(.*):(.*)")
       x, y, dx, dy = tonumber(x), tonumber(y), tonumber(dx), tonumber(dy)
       id = tonumber(id)
-      print(dx,dy)
       if id ~= player_id then
         if action == "pl" then
           if player_net[id] then
@@ -136,7 +135,6 @@ function game.update(dt)
   end
 
   for k, v in pairs(player_net) do
-    print("update")
     v:update(dt)
   end
 end

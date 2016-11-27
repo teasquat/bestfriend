@@ -160,7 +160,7 @@ function player_factory.make(x, y)
       end
     end
 
-    if self.y > love.graphics.getHeight() * 10 then
+    if self.y > love.graphics.getHeight() * 3 then
       self:die()
     end
 
@@ -229,6 +229,9 @@ function player_factory.make(x, y)
       else
         self:pick_up()
       end
+    elseif key == "q" then
+      client:close()
+      love.event.quit()
     end
   end
 

@@ -32,6 +32,7 @@ function player_factory.make(x, y)
     picked_up = true,
     -- status
     status = "ignore",
+    type = "player",
     -- animation
     walk      = {},
     walk_n    = {},
@@ -222,6 +223,10 @@ function player_factory.make(x, y)
         self:pick_up()
       end
     end
+  end
+
+  function player:die()
+    
   end
 
   function player:socket()

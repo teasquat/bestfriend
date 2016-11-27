@@ -56,8 +56,7 @@ function pet_factory.make(x, y, dx, dy, path)
       self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, self.filter)
 
       for i, v in ipairs(self.cols) do
-        if v.other.status == "food" then
-          self.health = self.health + 50
+        if v.other.type == "player" then
           v.other:die()
         end
         if v.normal.y ~= 0 then

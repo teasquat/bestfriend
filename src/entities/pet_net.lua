@@ -25,8 +25,10 @@ function pet_factory.make(x, y, dx, dy, path)
   }
 
   function pet.filter(item, other)
-    if other.status == "ignore" then
+    if other.status == "ignore" and other.type ~= "player" then
       return
+    elseif other.type == "player" then
+      return "cross"
     end
     return "slide"
   end

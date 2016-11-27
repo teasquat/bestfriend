@@ -4,6 +4,9 @@ function player_factory.make(x, y)
   local player = {
     frontness = 100,
     x = x, y = y,
+    spawn = {
+      x = x, y = y,
+    },
     -- velocity
     dx = 0,
     dy = 0,
@@ -226,7 +229,8 @@ function player_factory.make(x, y)
   end
 
   function player:die()
-    
+    self.x, self.y = self.spawn.x, self.spawn.y
+    world:update(self, self.x, self.y)
   end
 
   function player:socket()

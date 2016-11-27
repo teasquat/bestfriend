@@ -235,7 +235,7 @@ function player_factory.make(x, y)
   end
 
   function player:die()
-    self.x, self.y = self.spawn.x, self.spawn.y
+    self.x, self.y = spawns[math.random(1, #spawns)].x, spawns[math.random(1, #spawns)].y
     world:update(self, self.x, self.y)
 
     self.picked_up     = true

@@ -34,7 +34,7 @@ end
 
 -- handlers
 game_objects = {} -- all local game objects
-online_refs  = {} -- all references to to-be-submitted objects
+spawns       = {}
 pets = {
   [1] = "cat1",
   [2] = "cat2",
@@ -212,10 +212,12 @@ function make_level(image_data)
       elseif r == 0 and g == 255 and b == 0 then
         make_tile(x * 16, y * 16, "assets/flowers.png", 200)
       elseif r == 0 and g == 0 and b == 0 then
-        make_player(x * 16, y * 16)
+        table.insert(spawns, {x = x * 16, y = y * 16})
       end
     end
   end
+
+  make_player(spawns[math.random(1, #spawns)].x, spawns[math.random(1, #spawns)].y)
 end
 
 function make_player(x, y)

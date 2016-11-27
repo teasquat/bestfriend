@@ -231,6 +231,9 @@ function player_factory.make(x, y)
   function player:die()
     self.x, self.y = self.spawn.x, self.spawn.y
     world:update(self, self.x, self.y)
+
+    self.picked_up     = true
+    self.pet.picked_up = true
   end
 
   function player:socket()

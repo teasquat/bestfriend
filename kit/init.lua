@@ -5,7 +5,8 @@ state  = require("kit/lib/state")
 konami = require("kit/lib/konami")
 light  = require("kit/lib/light")
 bump   = require("kit/lib/bump")
-cam_m = require("kit/lib/camera")
+cam_m  = require("kit/lib/camera")
+uare   = require("kit/lib/uare")
 
 camera      = cam_m.make(0, 0, 1, 1, 0)
 world       = bump.newWorld()
@@ -37,7 +38,7 @@ function love.run()
     love.timer.step()
   end
 
-  state:switch("src/game")
+  state:switch("src/menu")
 
   while true do
     update_timer = update_timer + dt

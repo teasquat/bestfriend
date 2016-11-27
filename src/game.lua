@@ -73,14 +73,15 @@ end
 t = 0
 update_time = 0.5
 
-function game.load()
+function game.load(online)
+  online = online
+
   math.randomseed(os.time())
 
   game_objects = {}
 
   camera.sx, camera.sy = 0.35, 0.35
 
-  -- TODO: make level stuff
   make_level(love.graphics.newImage("assets/levels/demo.png"):getData())
 
   for i, v in ipairs(game_objects) do
@@ -88,8 +89,6 @@ function game.load()
       v:load()
     end
   end
-
-  --client:send("sp_" .. )
 
   table.sort(game_objects, function(a, b)
     return (a.frontness or 0) < (b.frontness or 0)
@@ -152,6 +151,8 @@ function game.update(dt)
   for k, v in pairs(pet_net) do
     v:update(dt)
   end
+
+  uare.update(dt)
 end
 
 function game.draw()

@@ -142,8 +142,6 @@ function player_factory.make(x, y)
             shake = 0
           end
 
-          --shack:set_shake(shake)
-
           self.grounded = true
         end
         if v.other ~= self.pet then

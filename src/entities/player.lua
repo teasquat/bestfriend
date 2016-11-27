@@ -230,7 +230,8 @@ function player_factory.make(x, y)
         self:pick_up()
       end
     elseif key == "q" then
-      client:close()
+      client:send("close")
+      for i=1,100000 do client:receive() end
       love.event.quit()
     end
   end

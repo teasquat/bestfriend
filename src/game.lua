@@ -57,9 +57,10 @@ online = true
 
 if online then
   player_net_factory = require("src/entities/player_net")
+  pet_net_factory = require("src/entities/pet_net")
   local socket = require "socket"
   client = socket.tcp()
-  client:connect("192.168.43.13", 7788) -- change to server ip
+  client:connect("localhost", 7788) -- change to server ip
   client:settimeout(0)
   math.randomseed(os.time())
   player_id = math.random(0,1000000)
@@ -127,7 +128,12 @@ function game.update(dt)
             player_net[id]:load()
           end
         elseif action == "pt" then
-          --pet_net[id] = {x=tonumber(x), y=tonumber(y), dx=tonumber(dx), dy=tonumber(dy)}
+          if pet_net[id] then
+            pet_net[id]:move(x, y, dx, dy)
+          else
+            pet_net[id] = pet_net_factory.make(x, y, dx, dy, "turtle")
+            pet_net[id]:load()
+          end
         end
       end
       data, _, _ = client:receive()
@@ -135,6 +141,9 @@ function game.update(dt)
   end
 
   for k, v in pairs(player_net) do
+    v:update(dt)
+  end
+  for k, v in pairs(pet_net) do
     v:update(dt)
   end
 end
@@ -146,8 +155,10 @@ function game.draw()
     end
   end
 
-  love.graphics.setColor(0,0,0)
   for k, v in pairs(player_net) do
+    v:draw()
+  end
+  for k, v in pairs(pet_net) do
     v:draw()
   end
 end

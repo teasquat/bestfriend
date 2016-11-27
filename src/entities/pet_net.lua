@@ -1,12 +1,12 @@
 local pet_factory = {}
 
-function pet_factory.make(x, y, path)
+function pet_factory.make(x, y, dx, dy, path)
   local pet = {
     x = x, y = y,
     w = 16, h = 16,
     -- velocity
-    dx = 0,  -- deltaX
-    dy = 0,  -- deltaY
+    dx = dx,  -- deltaX
+    dy = dy,  -- deltaY
     -- movement
     acc  = 30,   -- acceleration
     -- static
@@ -36,6 +36,7 @@ function pet_factory.make(x, y, path)
   function pet:load()
     world:add(self,self.x,self.y,self.w,self.h)
 
+    path = "turtle"
     self.blink[1] = love.graphics.newImage("assets/pet/" .. path .. ".png")
     self.blink[2] = love.graphics.newImage("assets/pet/" .. path .. "_.png")
   end
@@ -49,7 +50,6 @@ function pet_factory.make(x, y, path)
 
     if not self.picked_up then
       self.dy = self.dy + self.g * dt
-      self.dy = self.dy - (self.dy / self.frcy) * dt
 
       -- friction
       self.dx = self.dx - (self.dx / self.frcx) * dt
@@ -58,6 +58,10 @@ function pet_factory.make(x, y, path)
       self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, self.filter)
 
       for i, v in ipairs(self.cols) do
+        if v.other.status == "food" then
+          self.health = self.health + 50
+          v.other:die()
+        end
         if v.normal.y ~= 0 then
           self.dy = 0
         end
@@ -69,24 +73,28 @@ function pet_factory.make(x, y, path)
     else
       world:update(self, self.x, self.y)
     end
-
-    if self.health > 0 then
-      self.health = self.health - 10 * dt
-    end
   end
 
   function pet:draw()
-    love.graphics.setColor(255, 255, 255)
+    if self.rainbow_stuff then
+      love.graphics.setColor(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+    else
+      love.graphics.setColor(255, 255, 255)
+    end
     love.graphics.draw(self.blink[math.floor(self.index % #self.blink) + 1], self.x + self.w / 2, self.y, 0, self.dir, 1, self.w / 2)
 
     love.graphics.setColor(255, 0, 0)
     love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, 40, 4)
+
     love.graphics.setColor(0, 255, 0)
     love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, (self.health / 100) * 40, 4)
+
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("line", self.x + self.w / 2 - 20, self.y - self.h / 2.25, 40, 4)
   end
 
-  function pet:socket()
-    client:send("pt_" .. self.x .. ":" .. self.y .. ":" .. self.dx .. ":" .. self.dy .. "\n")
+  function pet:move(x, y, dx, dy)
+    self.x, self.y, self.dx, self.dy = x, y, dx, dy
   end
 
   return pet

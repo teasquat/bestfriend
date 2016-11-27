@@ -59,7 +59,7 @@ if online then
   player_net_factory = require("src/entities/player_net")
   local socket = require "socket"
   client = socket.tcp()
-  client:connect("192.168.43.13", 7788) -- change to server ip
+  client:connect("localhost", 7788) -- change to server ip
   client:settimeout(0)
   math.randomseed(os.time())
   player_id = math.random(0,1000000)
@@ -83,7 +83,9 @@ function game.load()
   make_level(love.graphics.newImage("assets/levels/demo.png"):getData())
 
   for i, v in ipairs(game_objects) do
-    v:load()
+    if v.load then
+      v:load()
+    end
   end
 
   table.sort(game_objects, function(a, b)
@@ -92,6 +94,8 @@ function game.load()
 end
 
 function game.update(dt)
+  love.window.setTitle("FPS: " .. love.timer.getFPS())
+
   for i, v in ipairs(game_objects) do
     if v.update then
       v:update(dt)
@@ -184,6 +188,10 @@ function make_level(image_data)
         make_block(x * 16, y * 16, "assets/grass.png", 16, 16)
       elseif r == 0 and g == 0 and b == 255 then
         make_block(x * 16, y * 16, "assets/stone.png", 16, 16)
+      elseif r == 255 and g == 255 and b == 0 then
+        make_tile(x * 16, y * 16, "assets/tree.png")
+      elseif r == 0 and g == 255 and b == 0 then
+        make_tile(x * 16, y * 16, "assets/flowers.png", 200)
       elseif r == 0 and g == 0 and b == 0 then
         make_player(x * 16, y * 16)
         make_food(x*16 + 16, y*16)
@@ -208,6 +216,17 @@ function make_block(x, y, path, w, h) -- path is image
   local block         = block_factory.make(x, y, w or 16, h or 16, path)
 
   table.insert(game_objects, block)
+end
+
+function make_tile(x, y, path, f) -- path is image
+  f = f or 0
+
+  local tile_factory = require("src/entities/tile")
+  local tile         = tile_factory.make(x, y, path)
+
+  tile.frontness = f
+
+  table.insert(game_objects, tile)
 end
 
 function make_pet(x, y) -- path is image

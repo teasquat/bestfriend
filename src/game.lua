@@ -1,9 +1,19 @@
 local game = state:new()
 
-love.graphics.setBackgroundColor(255, 255, 255)
+love.graphics.setBackgroundColor(130, 220, 250)
 
 function math.lerp(a, b, t)
   return (1 - t) * a + t * b
+end
+
+function math.clamp(a, b, x)
+  if x < a then
+    return b
+  elseif x > b then
+    return b
+  end
+
+  return x
 end
 
 function math.sign(n)
@@ -40,6 +50,7 @@ pets = {
   [12] = "duck",
   [13] = "bear",
   [14] = "tiger",
+  [15] = "elephant",
 }
 
 online = true
@@ -74,6 +85,10 @@ function game.load()
   for i, v in ipairs(game_objects) do
     v:load()
   end
+
+  table.sort(game_objects, function(a, b)
+    return (a.frontness or 0) < (b.frontness or 0)
+  end)
 end
 
 function game.update(dt)
@@ -127,7 +142,6 @@ function game.update(dt)
 end
 
 function game.draw()
-  love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
   for i, v in ipairs(game_objects) do
     if v.draw then
       v:draw()

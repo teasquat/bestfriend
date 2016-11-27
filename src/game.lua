@@ -53,28 +53,30 @@ pets = {
   [15] = "elephant",
 }
 
-online = true
+online = false
 
-if online then
-  player_net_factory = require("src/entities/player_net")
-  pet_net_factory = require("src/entities/pet_net")
-  local socket = require "socket"
-  client = socket.tcp()
-  client:connect("localhost", 7788) -- change to server ip
-  client:settimeout(0)
-  math.randomseed(os.time())
-  player_id = math.random(0,1000000)
+function game.load(yes)
+  if yes then
+    online = true
 
-  client:send("id_" .. player_id .. "\n")
+    if online then
+      player_net_factory = require("src/entities/player_net")
+      pet_net_factory = require("src/entities/pet_net")
+      local socket = require "socket"
+      client = socket.tcp()
+      client:connect("localhost", 7788) -- change to server ip
+      client:settimeout(0)
+      math.randomseed(os.time())
+      player_id = math.random(0,1000000)
 
-  pet_net = {}
-  player_net = {}
-end
-t = 0
-update_time = 0.5
+      client:send("id_" .. player_id .. "\n")
 
-function game.load(online)
-  online = online
+      pet_net = {}
+      player_net = {}
+    end
+    t = 0
+    update_time = 0.5
+  end
 
   math.randomseed(os.time())
 
@@ -103,53 +105,54 @@ function game.update(dt)
       v:update(dt)
     end
   end
-
-  t = t + dt
-  if online and t > update_time then
-    for i, v in ipairs(game_objects) do
-      if v.socket then
-        v:socket()
-      end
-    end
-
-    client:send("up_\n")
-
-    data, _, _ = client:receive()
-
-    while data do
-      if data == "done" then
-        break
-      end
-      action, id, value = data:match("(.*)_(.*)_(.*)")
-      x, y, dx, dy = value:match("(.*):(.*):(.*):(.*)")
-      x, y, dx, dy = tonumber(x), tonumber(y), tonumber(dx), tonumber(dy)
-      id = tonumber(id)
-      if id ~= player_id then
-        if action == "pl" then
-          if player_net[id] then
-            player_net[id]:move(x, y, dx, dy)
-          else
-            player_net[id] = player_net_factory.make(x, y, dx, dy)
-            player_net[id]:load()
-          end
-        elseif action == "pt" then
-          if pet_net[id] then
-            pet_net[id]:move(x, y, dx, dy)
-          else
-            pet_net[id] = pet_net_factory.make(x, y, dx, dy, "turtle")
-            pet_net[id]:load()
-          end
+  if online then
+    t = t + dt
+    if t > update_time then
+      for i, v in ipairs(game_objects) do
+        if v.socket then
+          v:socket()
         end
       end
-      data, _, _ = client:receive()
-    end
-  end
 
-  for k, v in pairs(player_net) do
-    v:update(dt)
-  end
-  for k, v in pairs(pet_net) do
-    v:update(dt)
+      client:send("up_\n")
+
+      data, _, _ = client:receive()
+
+      while data do
+        if data == "done" then
+          break
+        end
+        action, id, value = data:match("(.*)_(.*)_(.*)")
+        x, y, dx, dy = value:match("(.*):(.*):(.*):(.*)")
+        x, y, dx, dy = tonumber(x), tonumber(y), tonumber(dx), tonumber(dy)
+        id = tonumber(id)
+        if id ~= player_id then
+          if action == "pl" then
+            if player_net[id] then
+              player_net[id]:move(x, y, dx, dy)
+            else
+              player_net[id] = player_net_factory.make(x, y, dx, dy)
+              player_net[id]:load()
+            end
+          elseif action == "pt" then
+            if pet_net[id] then
+              pet_net[id]:move(x, y, dx, dy)
+            else
+              pet_net[id] = pet_net_factory.make(x, y, dx, dy, "turtle")
+              pet_net[id]:load()
+            end
+          end
+        end
+        data, _, _ = client:receive()
+      end
+    end
+
+    for k, v in pairs(player_net) do
+      v:update(dt)
+    end
+    for k, v in pairs(pet_net) do
+      v:update(dt)
+    end
   end
 
   uare.update(dt)
@@ -162,11 +165,13 @@ function game.draw()
     end
   end
 
-  for k, v in pairs(player_net) do
-    v:draw()
-  end
-  for k, v in pairs(pet_net) do
-    v:draw()
+  if online then
+    for k, v in pairs(player_net) do
+      v:draw()
+    end
+    for k, v in pairs(pet_net) do
+      v:draw()
+    end
   end
 end
 

@@ -64,14 +64,6 @@ function pet_factory.make(x, y, path)
       self.x, self.y, self.cols = world:move(self, self.x + self.dx, self.y + self.dy, self.filter)
 
       for i, v in ipairs(self.cols) do
-        if v.other.status == "food" then
-          self.health = self.health + 10
-          v.other:die()
-
-          if self.health >= 100 then
-            -- You win ... yay <4
-          end
-        end
         if v.normal.y ~= 0 then
           self.dy = 0
         end

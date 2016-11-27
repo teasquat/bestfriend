@@ -87,6 +87,8 @@ function game.load()
     v:load()
   end
 
+  --client:send("sp_" .. )
+
   table.sort(game_objects, function(a, b)
     return (a.frontness or 0) < (b.frontness or 0)
   end)
@@ -197,9 +199,6 @@ function make_level(image_data)
         make_block(x * 16, y * 16, "assets/stone.png", 16, 16)
       elseif r == 0 and g == 0 and b == 0 then
         make_player(x * 16, y * 16)
-        make_food(x*16 + 16, y*16)
-      elseif r == 255 and g == 255 and b == 0 then
-        make_pet(x * 16, y * 16)
       end
     end
   end
@@ -222,8 +221,10 @@ function make_block(x, y, path, w, h) -- path is image
 end
 
 function make_pet(x, y) -- path is image
+  local i = math.floor(math.random(1, #pets))
+
   local pet_factory = require("src/entities/pet")
-  local pet         = pet_factory.make(x, y, pets[math.floor(math.random(1, #pets))])
+  local pet         = pet_factory.make(x, y, pets[i], i)
 
   table.insert(game_objects, pet)
 

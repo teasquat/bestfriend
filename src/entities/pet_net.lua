@@ -14,8 +14,6 @@ function pet_factory.make(x, y, dx, dy, path)
     -- movement
     frcx = 1.5,  -- friction x
     frcy = 1.5,  -- friction y
-    --
-    health = 100,
 
     picked_up = true,
     -- status
@@ -82,15 +80,6 @@ function pet_factory.make(x, y, dx, dy, path)
       love.graphics.setColor(255, 255, 255)
     end
     love.graphics.draw(self.blink[math.floor(self.index % #self.blink) + 1], self.x + self.w / 2, self.y, 0, self.dir, 1, self.w / 2)
-
-    love.graphics.setColor(255, 0, 0)
-    love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, 40, 4)
-
-    love.graphics.setColor(0, 255, 0)
-    love.graphics.rectangle("fill", self.x + self.w / 2 - 20, self.y - self.h / 2.25, (self.health / 100) * 40, 4)
-
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.rectangle("line", self.x + self.w / 2 - 20, self.y - self.h / 2.25, 40, 4)
   end
 
   function pet:move(x, y, dx, dy)

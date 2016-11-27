@@ -160,6 +160,10 @@ function player_factory.make(x, y)
       end
     end
 
+    if self.y > love.graphics.getHeight() * 10 then
+      self:die()
+    end
+
     if self.picked_up then
       self.pet.y = self.y - self.h
       self.pet.x = self.x

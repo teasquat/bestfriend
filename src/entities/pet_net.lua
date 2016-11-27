@@ -15,7 +15,7 @@ function pet_factory.make(x, y, dx, dy, path)
     frcx = 1.5,  -- friction x
     frcy = 1.5,  -- friction y
 
-    picked_up = true,
+    picked_up = false,
     -- status
     status = "ignore",
     dir = 1,

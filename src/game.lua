@@ -60,7 +60,7 @@ if online then
   pet_net_factory = require("src/entities/pet_net")
   local socket = require "socket"
   client = socket.tcp()
-  client:connect("localhost", 7788) -- change to server ip
+  client:connect("10.105.112.125", 7788) -- change to server ip
   client:settimeout(0)
   math.randomseed(os.time())
   player_id = math.random(0,1000000)
